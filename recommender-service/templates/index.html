@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mood Based Music Recommender</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- FLASK STATIC CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <h1>🎧 Mood Based Music Recommender</h1>
+
+    <!-- TEXT INPUT -->
+    <div class="input-box">
+        <input id="textInput" placeholder="Tell me how you feel..." />
+        <button onclick="analyzeMood()">Detect Mood</button>
+    </div>
+
+    <hr />
+
+    <!-- EXISTING BUTTONS (UNCHANGED ‼️) -->
+    <div class="mood-buttons">
+        <button onclick="loadSongs('happy')">Happy</button>
+        <button onclick="loadSongs('calm')">Calm</button>
+        <button onclick="loadSongs('energetic')">Energetic</button>
+        <button onclick="loadSongs('romantic')">Romantic</button>
+    </div>
+
+    <!-- RESULT -->
+    <h2 id="moodResult"></h2>
+
+    <!-- SONGS -->
+    <div id="songs" class="songs-container"></div>
+
+    <!-- FLASK STATIC JS -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <!-- MOOD ANALYSIS SCRIPT -->
+    <script>
+        async function analyzeMood() {
+            const text = document.getElementById("textInput").value;
+
+            if (!text.trim()) {
+                alert("Please enter some text");
+                return;
+            }
+
+            const res = await fetch("/analyze", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text })
+            });
+
+            const data = await res.json();
+
+            document.getElementById("moodResult").innerText =
+                `Detected Mood: ${data.mood} (${(data.confidence * 100).toFixed(1)}%)`;
+
+            const container = document.getElementById("songs");
+            container.innerHTML = "";
+
+            data.tracks.forEach(song => {
+                container.innerHTML += `
+                    <div class="song-card">
+                        <img src="${song.image}" alt="cover">
+                        <h3>${song.name}</h3>
+                        <p>${song.artist}</p>
+                        <a href="${song.spotify_url}" target="_blank">Open in Spotify</a>
+                    </div>
+                `;
+            });
+        }
+    </script>
+
+</body>
+</html>

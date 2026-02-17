@@ -1,0 +1,25 @@
+##version: "3.8"
+
+services:
+  playlist-service:
+    image: shivani1604/playlist-service:1.0
+    container_name: playlist-service
+    ports:
+      - "5004:5004"
+    environment:
+      SPOTIFY_CLIENT_ID: 6167873833de43ca80e465eac3bc75d4
+      SPOTIFY_CLIENT_SECRET: 94ce306353a2430b938a9cc97e3566b8
+
+  mood-service:
+    image: rakshithas12/mood-service:3.0
+    container_name: mood-service
+    ports:
+      - "8000:8000"
+  recommender-service:
+    image: shivani1604/recommender-service:3.0
+    container_name: recommender-service
+    ports:
+      - "5000:5000"
+    depends_on:
+      - playlist-service
+      - mood-service
