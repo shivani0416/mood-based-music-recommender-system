@@ -7,8 +7,8 @@ services:
     ports:
       - "5004:5004"
     environment:
-      SPOTIFY_CLIENT_ID: 6167873833de43ca80e465eac3bc75d4
-      SPOTIFY_CLIENT_SECRET: 94ce306353a2430b938a9cc97e3566b8
+      SPOTIFY_CLIENT_ID: 6167873833d***ca80e465eac3bc75d4
+      SPOTIFY_CLIENT_SECRET: 94ce306353a***0b938a9cc97e3566b8
 
   mood-service:
     image: rakshithas12/mood-service:3.0
